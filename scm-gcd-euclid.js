@@ -1,3 +1,8 @@
+// SCM - Smallest Common Multiple
+// GCD - Greatest Common Divisor
+// Task:
+// - passing [a, b] to <smallestCommons>
+// - calculate SCM of a range [a, b] if a < b or [b, a] if b < a
 'use strict'
 
 function compare(a, b) {
@@ -5,13 +10,22 @@ function compare(a, b) {
 }
 
 function gcd(a, b) {
-    return 1;
+
+    if(a < b) {
+        [a, b] = [b, a] //swap
+    }
+
+    while(b) {
+        a %= b;
+        [a, b] = [b, a];
+    }
+
+    return a;
 }
 
-// gcd(a, b, c) = gcd(gcd(a, b), c)
-function gcdArray(arr) {
-    return 1;
-}   
+function lcm(a, b) {
+    return a * b / gcd(a, b);
+}
 
 function smallestCommons(arr) {
 
@@ -22,32 +36,32 @@ function smallestCommons(arr) {
     console.log('TCL: smallestCommons -> sortedArray', sortedArray)
 
     let range = [];
-    
+
     for (let i = sortedArray[0]; i <= sortedArray[1]; i++) {
-        range.push(i);        
+        range.push(i);
     }
     console.log('TCL: smallestCommons -> range', range)
 
-    // calculate gcd of the range
-    let arrayGCD = gcdArray(range);
-    console.log('TCL: smallestCommons -> arrayGCD', arrayGCD)
-    
-    let divided = [...range];
-	console.log('TCL: smallestCommons -> divided', divided)
-    let answer = 1;
-    
-    for (let i = 0; i < range.length; i++) {
-        divided[i] /= arrayGCD;
-        answer *= divided[i];
+    // -----------------------------------------------------
+
+    let lcmArray = [...range];
+	console.log('TCL: smallestCommons -> lcmArray', lcmArray)
+
+    for (let i = 0; i < lcmArray.length - 1; i++) {
+        lcmArray[i + 1] = lcm(lcmArray[i], lcmArray[i + 1]);
     }
-    console.log('TCL: smallestCommons -> divided', divided)
+    console.log('TCL: smallestCommons -> lcmArray', lcmArray)
+
+
+    let answer = lcmArray[lcmArray.length - 1];
+
 
     console.log('TCL: smallestCommons -> answer', answer)
-    
-   
+
     console.groupEnd("smallestCommons()");
+    return answer;
 }
 
 
 smallestCommons(
-    [23, 18]);
+    [5, 1]);
